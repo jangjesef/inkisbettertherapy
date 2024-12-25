@@ -54,7 +54,7 @@ export default function StudioPage() {
           <div className="space-y-8">
             <div className="aspect-[4/3] relative rounded-3xl overflow-hidden">
               <Image
-                src="/images/studio-1.jpg"
+                src="/images/studio-1.jpeg"
                 alt="Studio interior"
                 fill
                 className="object-cover"
@@ -63,7 +63,7 @@ export default function StudioPage() {
             <div className="grid grid-cols-2 gap-8">
               <div className="aspect-square relative rounded-3xl overflow-hidden">
                 <Image
-                  src="/images/studio-2.jpg"
+                  src="/images/studio-2.jpeg"
                   alt="Studio detail"
                   fill
                   className="object-cover"
@@ -71,7 +71,7 @@ export default function StudioPage() {
               </div>
               <div className="aspect-square relative rounded-3xl overflow-hidden">
                 <Image
-                  src="/images/studio-3.jpg"
+                  src="/images/studio-3.jpeg"
                   alt="Studio equipment"
                   fill
                   className="object-cover"
