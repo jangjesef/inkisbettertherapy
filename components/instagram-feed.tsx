@@ -1,75 +1,71 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { InstagramMedia } from '@/types/instagram'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Image from 'next/image'
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getInstagramPosts } from "@/lib/instagram-agentql";
 
 export function InstagramFeed() {
-  const [posts, setPosts] = useState<InstagramMedia[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [posts, setPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch('/api/instagram/posts')
-        if (!response.ok) {
-          throw new Error('Nepodařilo se načíst příspěvky')
-        }
-        const data = await response.json()
-        setPosts(data)
+        const data = await getInstagramPosts();
+        setPosts(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Nastala chyba při načítání')
+        setError(err instanceof Error ? err.message : 'Failed to load posts');
+        console.error('Error fetching Instagram posts:', err);
       } finally {
-        setLoading(false)
+        setIsLoading(false);
       }
     }
 
-    fetchPosts()
-  }, [])
+    fetchPosts();
+  }, []);
 
-  if (loading) {
-    return <div className="text-center p-4">Načítám příspěvky...</div>
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+        {Array(6).fill(0).map((_, i) => (
+          <Card key={i} className="overflow-hidden">
+            <CardContent className="p-0">
+              <Skeleton className="aspect-square w-full" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center text-red-500 p-4">{error}</div>
+    return <div className="text-red-500">Error: {error}</div>;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {posts.map((post) => (
-        <Card key={post.id} className="overflow-hidden">
-          <CardHeader>
-            <CardTitle className="text-sm truncate">{post.caption || 'Instagram příspěvek'}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {post.media_type === 'IMAGE' && (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      {posts.map((post, index) => (
+        <Card key={index} className="overflow-hidden bg-white">
+          <CardContent className="p-0">
+            <a href={post.permalink} target="_blank" rel="noopener noreferrer" className="block">
               <div className="relative aspect-square">
-                <Image
-                  src={post.media_url}
-                  alt={post.caption || 'Instagram obrázek'}
-                  fill
-                  className="object-cover rounded-md"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                <img
+                  src={post.image_url}
+                  alt={post.caption || 'Instagram post'}
+                  className="w-full h-full object-cover transition-transform hover:scale-105"
                 />
               </div>
-            )}
-            {post.media_type === 'VIDEO' && (
-              <video
-                src={post.media_url}
-                controls
-                className="w-full rounded-md"
-                poster={post.thumbnail_url}
-              />
-            )}
-            <div className="mt-2 text-sm text-gray-500">
-              {new Date(post.timestamp).toLocaleDateString('cs-CZ')}
-            </div>
+              {post.caption && (
+                <div className="p-4">
+                  <p className="text-sm text-gray-600 line-clamp-2">{post.caption}</p>
+                </div>
+              )}
+            </a>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
+  );
 } 

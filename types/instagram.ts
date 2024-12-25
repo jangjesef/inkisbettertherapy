@@ -6,12 +6,11 @@ export interface InstagramMedia {
   permalink: string;
   thumbnail_url?: string;
   timestamp: string;
-  username: string;
 }
 
 export interface InstagramApiResponse {
   data: InstagramMedia[];
-  paging?: {
+  paging: {
     cursors: {
       before: string;
       after: string;

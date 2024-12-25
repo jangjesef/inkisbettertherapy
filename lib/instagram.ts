@@ -1,40 +1,43 @@
-import axios from 'axios';
 import { InstagramApiResponse, InstagramMedia } from '@/types/instagram';
 
 const INSTAGRAM_API_URL = 'https://graph.instagram.com';
+const INSTAGRAM_BASIC_DISPLAY_URL = 'https://api.instagram.com';
 
 export async function getInstagramToken(code: string): Promise<string> {
-  const params = new URLSearchParams({
-    client_id: process.env.INSTAGRAM_APP_ID!,
-    client_secret: process.env.INSTAGRAM_APP_SECRET!,
-    grant_type: 'authorization_code',
-    redirect_uri: process.env.INSTAGRAM_REDIRECT_URI!,
-    code,
-  });
-
-  const response = await axios.post(
-    `${INSTAGRAM_API_URL}/oauth/access_token`,
-    params
+  const response = await fetch(
+    `${INSTAGRAM_BASIC_DISPLAY_URL}/oauth/access_token`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: process.env.INSTAGRAM_APP_ID!,
+        client_secret: process.env.INSTAGRAM_APP_SECRET!,
+        grant_type: 'authorization_code',
+        redirect_uri: process.env.INSTAGRAM_CALLBACK_URL!,
+        code,
+      }),
+    }
   );
 
-  return response.data.access_token;
+  if (!response.ok) {
+    throw new Error('Failed to get Instagram token');
+  }
+
+  const data = await response.json();
+  return data.access_token;
 }
 
-export async function getInstagramPosts(token: string): Promise<InstagramMedia[]> {
-  try {
-    const response = await axios.get<InstagramApiResponse>(
-      `${INSTAGRAM_API_URL}/me/media`,
-      {
-        params: {
-          access_token: token,
-          fields: 'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username',
-        },
-      }
-    );
+export async function getInstagramPosts(token: string, limit = 9): Promise<InstagramMedia[]> {
+  const response = await fetch(
+    `${INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&limit=${limit}&access_token=${token}`
+  );
 
-    return response.data.data;
-  } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
-    return [];
+  if (!response.ok) {
+    throw new Error('Failed to fetch Instagram posts');
   }
+
+  const data: InstagramApiResponse = await response.json();
+  return data.data;
 } 

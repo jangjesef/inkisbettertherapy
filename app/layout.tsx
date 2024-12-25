@@ -1,11 +1,11 @@
-import './globals.css'
+import "./globals.css"
 import { Inter } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: 'Inky is Better',
-  description: 'Inky is Better - Therapy',
+  title: "Ink is Better Than Therapy - Tattoo Studio",
+  description: "Private Tattoo Studio based in Brno, Czech Republic",
 }
 
 export default function RootLayout({
