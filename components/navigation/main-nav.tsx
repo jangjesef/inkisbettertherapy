@@ -24,24 +24,12 @@ export function MainNav() {
       isScrolled ? 'bg-neutral-100/50 backdrop-blur-md' : 'bg-neutral-100'
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
-        {/* Left droplet */}
-        <div className="w-8 h-8">
+        {/* Left droplet as home button - visible on all screens */}
+        <Link href="/" className="w-8 h-8 hover:opacity-70 transition-opacity">
           <Droplet className="w-full h-full" />
-        </div>
+        </Link>
 
-        {/* Mobile menu button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden p-2"
-        >
-          {isMobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
-
-        {/* Center content with navigation */}
+        {/* Center content with navigation - hidden on mobile */}
         <div className="hidden lg:flex items-center justify-center flex-1">
           <div className="flex items-center space-x-6">
             <Link
@@ -81,15 +69,34 @@ export function MainNav() {
           </div>
         </div>
 
-        {/* Right droplet */}
-        <div className="w-8 h-8">
+        {/* Right droplet - only visible on desktop */}
+        <div className="hidden lg:block w-8 h-8">
           <Droplet className="w-full h-full" />
         </div>
+
+        {/* Mobile menu button - only visible on mobile */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden p-2"
+        >
+          {isMobileMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
       </div>
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-neutral-100 px-6 py-4 space-y-4">
+          <Link 
+            href="/" 
+            className="block text-xl text-black hover:text-black/70 transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Home
+          </Link>
           <Link 
             href="/studio" 
             className="block text-xl text-black hover:text-black/70 transition-colors"
