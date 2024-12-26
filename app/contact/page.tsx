@@ -11,7 +11,7 @@ export default function ContactPage() {
         {/* Header section */}
         <div className="w-full bg-black rounded-3xl p-16 mb-8">
           <div className="text-white text-right">
-            <h1 className="text-7xl font-medium">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-right">
               Contact
             </h1>
           </div>

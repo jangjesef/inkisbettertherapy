@@ -9,6 +9,18 @@ export default function HomePage() {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const isDrawingRef = useRef(false);
   const lastPosRef = useRef({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +41,7 @@ export default function HomePage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.lineWidth = 3;
@@ -63,10 +75,45 @@ export default function HomePage() {
       isDrawingRef.current = false;
     }
 
+    function handleTouchStart(e: TouchEvent) {
+      if (!canvas) return;
+      isDrawingRef.current = true;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      lastPosRef.current = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+      };
+    }
+
+    function handleTouchMove(e: TouchEvent) {
+      if (!isDrawingRef.current || !ctx || !canvas) return;
+      e.preventDefault();
+
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      ctx.beginPath();
+      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      lastPosRef.current = { x, y };
+    }
+
+    function handleTouchEnd() {
+      isDrawingRef.current = false;
+    }
+
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
@@ -74,12 +121,15 @@ export default function HomePage() {
       canvas.removeEventListener('mousemove', draw);
       canvas.removeEventListener('mouseup', stopDrawing);
       canvas.removeEventListener('mouseleave', stopDrawing);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-neutral-100">
-      <div className="fixed top-0 left-0 right-0 z-50 no-drawing">
+    <main className="relative min-h-screen bg-[#FF6EC7]">
+      <div className="fixed top-0 left-0 right-0 z-50">
         <MainNav />
       </div>
       <div ref={heroRef} className="relative">
@@ -95,20 +145,20 @@ export default function HomePage() {
             width: canvasSize.width,
             height: canvasSize.height,
             pointerEvents: 'all',
-            top: '64px',
+            top: '0px',
             bottom: '80px'
           }}
         />
-        <div className="fixed bottom-0 left-0 right-0 z-50 no-drawing">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 lg:gap-0">
-              <p className="text-black max-w-xl">
+        <div className="fixed bottom-0 left-0 right-0 z-40 no-drawing">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 sm:gap-6 lg:gap-0">
+              <p className="text-black text-sm sm:text-base max-w-xl">
                 Najdete nás na Mášova 8 v Brně. Jsme soukromé tetovací studio, kde tvoří Gabriela Gajdošová. Mrkněte na náš{' '}
                 <a 
                   href="https://instagram.com/ink_is_better_than_therapy" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-700"
+                  className="text-black hover:text-black/70"
                 >
                   Instagram
                 </a>
@@ -117,12 +167,14 @@ export default function HomePage() {
                   href="https://instagram.com/ink_is_better_than_therapy" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-700"
+                  className="text-black hover:text-black/70"
                 >
                   DM
                 </a>.
               </p>
-              <p className="text-black">Click and drag to draw</p>
+              <p className="text-black text-sm sm:text-base">
+                {isMobile ? 'Touch and drag to draw' : 'Click and drag to draw'}
+              </p>
             </div>
           </div>
         </div>
