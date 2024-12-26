@@ -1,3 +1,9 @@
+export interface InstagramMediaChild {
+  id: string;
+  media_type: 'IMAGE' | 'VIDEO';
+  media_url: string;
+}
+
 export interface InstagramMedia {
   id: string;
   caption: string;
@@ -6,9 +12,15 @@ export interface InstagramMedia {
   permalink: string;
   thumbnail_url?: string;
   timestamp: string;
+  username: string;
+  like_count: number;
+  comments_count: number;
+  children?: {
+    data: InstagramMediaChild[];
+  };
 }
 
-export interface InstagramApiResponse {
+export interface InstagramFeed {
   data: InstagramMedia[];
   paging: {
     cursors: {

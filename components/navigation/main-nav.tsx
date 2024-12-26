@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, Droplet } from "lucide-react";
+import { Logo } from "../logo";
 
 export function MainNav() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,13 +24,12 @@ export function MainNav() {
       isScrolled ? 'bg-neutral-100/50 backdrop-blur-md' : 'bg-neutral-100'
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
-        {/* Logo left */}
-        <Link href="/" className="flex items-center">
-          <div className="w-8 h-8">
-            <Droplet className="w-full h-full" />
-          </div>
-        </Link>
+        {/* Left droplet */}
+        <div className="w-8 h-8">
+          <Droplet className="w-full h-full" />
+        </div>
 
+        {/* Mobile menu button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="lg:hidden p-2"
@@ -41,47 +41,50 @@ export function MainNav() {
           )}
         </button>
 
-        {/* Desktop navigation */}
-        <div className="hidden lg:flex items-center space-x-12">
-          <Link
-            href="/studio"
-            className="text-xl text-black hover:opacity-70 transition"
-          >
-            Studio
-          </Link>
-          <Link
-            href="/portfolio"
-            className="text-xl text-black hover:opacity-70 transition"
-          >
-            Portfolio
-          </Link>
+        {/* Center content with navigation */}
+        <div className="hidden lg:flex items-center justify-center flex-1">
+          <div className="flex items-center space-x-6">
+            <Link
+              href="/studio"
+              className="text-lg text-black hover:text-black/70 transition-colors"
+            >
+              Studio
+            </Link>
+            <Link
+              href="/portfolio"
+              className="text-lg text-black hover:text-black/70 transition-colors"
+            >
+              Portfolio
+            </Link>
+          </div>
+          
           <Link 
             href="/" 
-            className="text-2xl font-medium px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition flex flex-col items-center"
+            className="mx-8 text-2xl font-medium px-8 py-2 bg-black text-white rounded-full hover:opacity-90 transition"
           >
-            <span className="whitespace-nowrap text-lg">Ink is Better</span>
-            <span className="text-sm opacity-70">than therapy</span>
+            <Logo size="sm" className="text-white" />
           </Link>
-          <Link
-            href="/about"
-            className="text-xl text-black hover:opacity-70 transition"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="text-xl text-black hover:opacity-70 transition"
-          >
-            Contact
-          </Link>
+          
+          <div className="flex items-center space-x-6">
+            <Link
+              href="/about"
+              className="text-lg text-black hover:text-black/70 transition-colors"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="text-lg text-black hover:text-black/70 transition-colors"
+            >
+              Contact
+            </Link>
+          </div>
         </div>
 
-        {/* Logo right - hidden on mobile */}
-        <Link href="/" className="hidden lg:flex items-center">
-          <div className="w-8 h-8">
-            <Droplet className="w-full h-full" />
-          </div>
-        </Link>
+        {/* Right droplet */}
+        <div className="w-8 h-8">
+          <Droplet className="w-full h-full" />
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -89,36 +92,28 @@ export function MainNav() {
         <div className="lg:hidden bg-neutral-100 px-6 py-4 space-y-4">
           <Link 
             href="/studio" 
-            className="block text-xl text-black hover:opacity-70 transition"
+            className="block text-xl text-black hover:text-black/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Studio
           </Link>
           <Link 
             href="/portfolio" 
-            className="block text-xl text-black hover:opacity-70 transition"
+            className="block text-xl text-black hover:text-black/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Portfolio
           </Link>
           <Link 
-            href="/" 
-            className="block text-xl text-black hover:opacity-70 transition"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <span className="font-medium">Ink is Better</span>
-            <span className="text-sm opacity-70 ml-2">than therapy</span>
-          </Link>
-          <Link 
             href="/about" 
-            className="block text-xl text-black hover:opacity-70 transition"
+            className="block text-xl text-black hover:text-black/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             About
           </Link>
           <Link 
             href="/contact" 
-            className="block text-xl text-black hover:opacity-70 transition"
+            className="block text-xl text-black hover:text-black/70 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Contact
