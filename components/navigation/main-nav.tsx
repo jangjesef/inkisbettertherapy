@@ -25,12 +25,10 @@ export function MainNav() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isHomePage 
-        ? isScrolled 
-          ? 'bg-neutral-100/50 backdrop-blur-md' 
-          : 'bg-transparent'
+        ? 'bg-transparent' 
         : isScrolled 
-          ? 'bg-neutral-100/50 backdrop-blur-md' 
-          : 'bg-neutral-100'
+          ? 'bg-white/50 backdrop-blur-md' 
+          : 'bg-white'
     }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
         {/* Left droplet as home button - visible on all screens */}
@@ -96,7 +94,7 @@ export function MainNav() {
         </button>
       </div>
 
-      {/* Overlay s blur efektem na pozadí - přesunuto na konec */}
+      {/* Overlay s blur efektem na pozadí */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[55] lg:hidden"
@@ -105,7 +103,7 @@ export function MainNav() {
         />
       )}
 
-      {/* Mobile menu - nejvyšší z-index */}
+      {/* Mobile menu */}
       <div 
         className={`
           fixed top-0 right-0 h-full w-[300px] bg-white shadow-lg

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function StudioPage() {
   return (
-    <main className="min-h-screen bg-neutral-100">
+    <main className="min-h-screen">
       <MainNav />
       
       <div className="pt-24 px-6 max-w-7xl mx-auto">
