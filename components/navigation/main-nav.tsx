@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, Droplet } from "lucide-react";
+import { Menu, X, Droplet, Phone, Mail, MapPin, Instagram } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { Logo } from "../logo";
 
@@ -141,6 +141,8 @@ export function MainNav() {
               <X className="h-6 w-6" />
             </button>
           </div>
+          
+          {/* Navigation Links */}
           <div className="flex-1 p-6 pt-0 space-y-6">
             <Link 
               href="/" 
@@ -177,6 +179,44 @@ export function MainNav() {
             >
               Contact
             </Link>
+          </div>
+
+          {/* Contact Information */}
+          <div className="p-6 bg-black/5">
+            <div className="space-y-4">
+              <a 
+                href="tel:+420732500314" 
+                className="flex items-center gap-3 text-black/80 hover:text-black transition-colors"
+              >
+                <Phone className="w-5 h-5" />
+                <span>+420 732 500 314</span>
+              </a>
+              <a 
+                href="mailto:info@inkisbetter.cz" 
+                className="flex items-center gap-3 text-black/80 hover:text-black transition-colors"
+              >
+                <Mail className="w-5 h-5" />
+                <span>info@inkisbetter.cz</span>
+              </a>
+              <a 
+                href="https://maps.app.goo.gl/HXHHEZxvz8v4LFKP8" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-black/80 hover:text-black transition-colors"
+              >
+                <MapPin className="w-5 h-5" />
+                <span>Mášova 8, Brno</span>
+              </a>
+              <a 
+                href="https://instagram.com/ink_is_better_than_therapy" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-black/80 hover:text-black transition-colors"
+              >
+                <Instagram className="w-5 h-5" />
+                <span>@ink_is_better_than_therapy</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

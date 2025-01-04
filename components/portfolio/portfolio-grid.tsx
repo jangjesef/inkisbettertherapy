@@ -1,10 +1,11 @@
 "use client";
 import { useState } from 'react';
 import { Heart, MessageCircle, Share2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import type { InstagramMedia } from "@/types/instagram";
+import { useInstagramFeed } from '@/lib/hooks/use-instagram-feed';
+import { InstagramImage } from '../instagram/instagram-image';
 
 const CARD_COLORS = [
   'bg-yellow-300',
@@ -23,6 +24,10 @@ interface PortfolioGridProps {
 
 export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
   const [displayCount, setDisplayCount] = useState(10);
+  const { posts: livePosts, isLoading } = useInstagramFeed(30000); // Refresh every 30 seconds
+  
+  // Use live posts if available, otherwise fall back to initial posts
+  const posts = livePosts.length > 0 ? livePosts : initialPosts;
   
   const getRandomColor = (() => {
     let lastColorIndex = -1;
@@ -38,7 +43,7 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
     };
   })();
 
-  const postColors = initialPosts.map(() => getRandomColor());
+  const postColors = posts.map(() => getRandomColor());
 
   const handleShare = async (permalink: string, caption: string) => {
     if (navigator.share) {
@@ -59,7 +64,7 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {initialPosts.slice(0, displayCount).map((post, index) => (
+        {posts.slice(0, displayCount).map((post, index) => (
           <Link
             key={post.id}
             href={post.permalink}
@@ -69,10 +74,9 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
           >
             <div className="p-8">
               <div className="aspect-square relative rounded-2xl overflow-hidden mb-6">
-                <Image
+                <InstagramImage
                   src={post.media_url}
                   alt={post.caption || "Instagram post"}
-                  fill
                   className="object-cover"
                 />
               </div>
@@ -102,7 +106,7 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
                   </div>
                   <time className="text-sm">{formatDate(post.timestamp)}</time>
                 </div>
-                
+
                 {/* Popis */}
                 <p className="text-lg text-black/80 line-clamp-3">
                   {post.caption}
@@ -125,7 +129,7 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
         ))}
       </div>
 
-      {displayCount < initialPosts.length && (
+      {displayCount < posts.length && (
         <div className="flex justify-center mt-12">
           <button
             onClick={() => setDisplayCount(prev => prev + 10)}

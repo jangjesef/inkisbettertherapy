@@ -2,16 +2,22 @@
 
 import { InstagramMedia } from "@/types/instagram";
 import { PostCarousel } from "./post-carousel";
-import Image from "next/image";
 import Link from "next/link";
 import { Heart, MessageCircle, Images } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { useInstagramFeed } from "@/lib/hooks/use-instagram-feed";
+import { InstagramImage } from "./instagram-image";
 
 interface LatestWorksProps {
   posts: InstagramMedia[];
 }
 
-export function LatestWorks({ posts }: LatestWorksProps) {
+export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
+  const { posts: livePosts } = useInstagramFeed(30000); // Refresh every 30 seconds
+  
+  // Use live posts if available, otherwise fall back to initial posts
+  const posts = livePosts.length > 0 ? livePosts : initialPosts;
+  
   // Zobrazíme jen první 4 příspěvky
   const latestPosts = posts.slice(0, 4);
 
@@ -44,10 +50,9 @@ export function LatestWorks({ posts }: LatestWorksProps) {
                     />
                   ) : (
                     <div className="aspect-video relative rounded-2xl overflow-hidden mb-6">
-                      <Image
+                      <InstagramImage
                         src={post.media_url}
                         alt={post.caption || "Instagram post"}
-                        fill
                         className="object-cover"
                       />
                     </div>
