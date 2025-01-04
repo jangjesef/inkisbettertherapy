@@ -2,6 +2,7 @@ export interface InstagramMediaChild {
   id: string;
   media_type: 'IMAGE' | 'VIDEO';
   media_url: string;
+  thumbnail_url?: string;
 }
 
 export interface InstagramMedia {

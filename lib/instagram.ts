@@ -5,13 +5,9 @@ const INSTAGRAM_API_URL = 'https://graph.instagram.com';
 export async function getInstagramFeed(): Promise<InstagramMedia[]> {
   try {
     const response = await fetch(
-      `${INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username,children{media_url,thumbnail_url},like_count,comments_count&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}&limit=100`,
+      `${INSTAGRAM_API_URL}/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,username,children{media_url,media_type,thumbnail_url},like_count,comments_count&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}&limit=100`,
       {
-        // Disable cache to always get fresh URLs
-        cache: 'no-store',
-        next: {
-          revalidate: 0 // Disable caching at the fetch level
-        }
+        cache: 'no-store'
       }
     );
     
@@ -22,7 +18,6 @@ export async function getInstagramFeed(): Promise<InstagramMedia[]> {
 
     const data: InstagramFeed = await response.json();
     
-    // Add error handling for media URLs
     return data.data.map(post => ({
       ...post,
       media_url: post.media_url,

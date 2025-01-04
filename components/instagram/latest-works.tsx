@@ -1,15 +1,15 @@
 "use client";
 
-import { InstagramMedia } from "@/types/instagram";
+import { InstagramMedia as InstagramMediaType } from "@/types/instagram";
 import { PostCarousel } from "./post-carousel";
 import Link from "next/link";
 import { Heart, MessageCircle, Images } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useInstagramFeed } from "@/lib/hooks/use-instagram-feed";
-import { InstagramImage } from "./instagram-image";
+import { InstagramMedia } from "./instagram-media";
 
 interface LatestWorksProps {
-  posts: InstagramMedia[];
+  posts: InstagramMediaType[];
 }
 
 export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
@@ -45,13 +45,17 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                   {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
                     <PostCarousel
                       media_url={post.media_url}
+                      media_type={post.media_type}
+                      thumbnail_url={post.thumbnail_url}
                       children_media={post.children.data}
                       caption={post.caption}
                     />
                   ) : (
                     <div className="aspect-video relative rounded-2xl overflow-hidden mb-6">
-                      <InstagramImage
+                      <InstagramMedia
                         src={post.media_url}
+                        type={post.media_type}
+                        thumbnail_url={post.thumbnail_url}
                         alt={post.caption || "Instagram post"}
                         className="object-cover"
                       />

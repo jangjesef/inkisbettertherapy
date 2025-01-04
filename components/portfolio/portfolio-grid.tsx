@@ -1,11 +1,12 @@
 "use client";
 import { useState } from 'react';
-import { Heart, MessageCircle, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Share2, Play } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import type { InstagramMedia } from "@/types/instagram";
+import type { InstagramMedia as InstagramMediaType } from "@/types/instagram";
 import { useInstagramFeed } from '@/lib/hooks/use-instagram-feed';
-import { InstagramImage } from '../instagram/instagram-image';
+import { InstagramMedia } from '../instagram/instagram-media';
+import { PostCarousel } from '../instagram/post-carousel';
 
 const CARD_COLORS = [
   'bg-yellow-300',
@@ -19,7 +20,7 @@ const CARD_COLORS = [
 ];
 
 interface PortfolioGridProps {
-  initialPosts: InstagramMedia[];
+  initialPosts: InstagramMediaType[];
 }
 
 export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
@@ -74,11 +75,23 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
           >
             <div className="p-8">
               <div className="aspect-square relative rounded-2xl overflow-hidden mb-6">
-                <InstagramImage
-                  src={post.media_url}
-                  alt={post.caption || "Instagram post"}
-                  className="object-cover"
-                />
+                {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
+                  <PostCarousel
+                    media_url={post.media_url}
+                    media_type={post.media_type === 'CAROUSEL_ALBUM' ? 'IMAGE' : post.media_type}
+                    thumbnail_url={post.thumbnail_url}
+                    children_media={post.children.data}
+                    caption={post.caption}
+                  />
+                ) : (
+                  <InstagramMedia
+                    src={post.media_url}
+                    type={post.media_type === 'CAROUSEL_ALBUM' ? 'IMAGE' : post.media_type}
+                    thumbnail_url={post.thumbnail_url}
+                    alt={post.caption || "Instagram post"}
+                    className="object-cover"
+                  />
+                )}
               </div>
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold">{post.caption?.split('\n')[0] || ''}</h2>
@@ -94,6 +107,11 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
                       <MessageCircle className="w-5 h-5" />
                       <span>{post.comments_count}</span>
                     </div>
+                    {post.media_type === 'VIDEO' && (
+                      <div className="flex items-center gap-1">
+                        <Play className="w-5 h-5" />
+                      </div>
+                    )}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();
