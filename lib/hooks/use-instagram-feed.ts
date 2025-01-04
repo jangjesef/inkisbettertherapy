@@ -9,20 +9,23 @@ const fetcher = async (): Promise<InstagramMedia[]> => {
   return response.json()
 }
 
-export function useInstagramFeed(refreshInterval = 60000) {
-  const { data, error, isLoading } = useSWR<InstagramMedia[]>(
+export function useInstagramFeed(refreshInterval = 30000) {
+  const { data, error, isLoading, mutate } = useSWR<InstagramMedia[]>(
     'instagram-feed',
     fetcher,
     {
       refreshInterval,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
+      refreshWhenHidden: true,
+      dedupingInterval: 10000,
     }
   )
 
   return {
     posts: data ?? [],
     isLoading,
-    isError: error
+    isError: error,
+    refresh: mutate
   }
 } 
