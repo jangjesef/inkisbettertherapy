@@ -42,16 +42,16 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                 className="bg-white rounded-3xl overflow-hidden hover:scale-[1.02] transition-transform"
               >
                 <div className="p-8">
-                  {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
-                    <PostCarousel
-                      media_url={post.media_url}
-                      media_type="IMAGE"
-                      thumbnail_url={post.thumbnail_url}
-                      children_media={post.children.data}
-                      caption={post.caption}
-                    />
-                  ) : (
-                    <div className="aspect-video relative rounded-2xl overflow-hidden mb-6">
+                  <div className="aspect-square relative rounded-2xl overflow-hidden mb-6">
+                    {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
+                      <PostCarousel
+                        media_url={post.media_url}
+                        media_type="IMAGE"
+                        thumbnail_url={post.thumbnail_url}
+                        children_media={post.children.data}
+                        caption={post.caption}
+                      />
+                    ) : (
                       <InstagramMedia
                         src={post.media_url}
                         type={post.media_type === 'CAROUSEL_ALBUM' ? 'IMAGE' : post.media_type}
@@ -59,8 +59,8 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                         alt={post.caption || "Instagram post"}
                         className="object-cover"
                       />
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <div className="space-y-4">
                     {post.caption && (
                       <p className="text-lg text-gray-700 line-clamp-2">{post.caption}</p>

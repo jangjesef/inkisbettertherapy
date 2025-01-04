@@ -29,7 +29,7 @@ export function PostCarousel({ media_url, media_type, thumbnail_url, children_me
   };
 
   return (
-    <div className="relative aspect-video rounded-2xl overflow-hidden">
+    <div className="relative aspect-square rounded-2xl overflow-hidden">
       {media.map((item, index) => (
         <div
           key={item.media_url}
