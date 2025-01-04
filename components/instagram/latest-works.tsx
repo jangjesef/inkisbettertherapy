@@ -3,7 +3,7 @@
 import { InstagramMedia as InstagramMediaType } from "@/types/instagram";
 import { PostCarousel } from "./post-carousel";
 import Link from "next/link";
-import { Heart, MessageCircle, Images } from "lucide-react";
+import { Heart, MessageCircle, Images, Play } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useInstagramFeed } from "@/lib/hooks/use-instagram-feed";
 import { InstagramMedia } from "./instagram-media";
@@ -45,7 +45,7 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                   {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
                     <PostCarousel
                       media_url={post.media_url}
-                      media_type={post.media_type}
+                      media_type="IMAGE"
                       thumbnail_url={post.thumbnail_url}
                       children_media={post.children.data}
                       caption={post.caption}
@@ -54,7 +54,7 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                     <div className="aspect-video relative rounded-2xl overflow-hidden mb-6">
                       <InstagramMedia
                         src={post.media_url}
-                        type={post.media_type}
+                        type={post.media_type === 'CAROUSEL_ALBUM' ? 'IMAGE' : post.media_type}
                         thumbnail_url={post.thumbnail_url}
                         alt={post.caption || "Instagram post"}
                         className="object-cover"
@@ -75,6 +75,11 @@ export function LatestWorks({ posts: initialPosts }: LatestWorksProps) {
                           <MessageCircle className="w-5 h-5" />
                           <span>{post.comments_count}</span>
                         </div>
+                        {post.media_type === 'VIDEO' && (
+                          <div className="flex items-center gap-2">
+                            <Play className="w-5 h-5" />
+                          </div>
+                        )}
                         {post.media_type === 'CAROUSEL_ALBUM' && (
                           <div className="flex items-center gap-2">
                             <Images className="w-5 h-5" />

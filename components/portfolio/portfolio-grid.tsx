@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { Heart, MessageCircle, Share2, Play } from "lucide-react";
+import { Heart, MessageCircle, Share2, Play, Images } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import type { InstagramMedia as InstagramMediaType } from "@/types/instagram";
@@ -78,7 +78,7 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
                 {post.media_type === 'CAROUSEL_ALBUM' && post.children ? (
                   <PostCarousel
                     media_url={post.media_url}
-                    media_type={post.media_type === 'CAROUSEL_ALBUM' ? 'IMAGE' : post.media_type}
+                    media_type="IMAGE"
                     thumbnail_url={post.thumbnail_url}
                     children_media={post.children.data}
                     caption={post.caption}
@@ -110,6 +110,12 @@ export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
                     {post.media_type === 'VIDEO' && (
                       <div className="flex items-center gap-1">
                         <Play className="w-5 h-5" />
+                      </div>
+                    )}
+                    {post.media_type === 'CAROUSEL_ALBUM' && (
+                      <div className="flex items-center gap-1">
+                        <Images className="w-5 h-5" />
+                        <span>{post.children?.data.length}</span>
                       </div>
                     )}
                     <button 
