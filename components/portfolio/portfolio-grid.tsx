@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Heart, MessageCircle, Share2, Play, Images } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
@@ -19,32 +19,41 @@ const CARD_COLORS = [
   'bg-indigo-400',
 ];
 
+function getRandomColor(lastIndex: number): [string, number] {
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * CARD_COLORS.length);
+  } while (newIndex === lastIndex);
+  
+  return [CARD_COLORS[newIndex], newIndex];
+}
+
+function generateColors(count: number): string[] {
+  const colors: string[] = [];
+  let lastIndex = -1;
+  
+  for (let i = 0; i < count; i++) {
+    const [color, newIndex] = getRandomColor(lastIndex);
+    colors.push(color);
+    lastIndex = newIndex;
+  }
+  
+  return colors;
+}
+
 interface PortfolioGridProps {
   initialPosts: InstagramMediaType[];
 }
 
 export function PortfolioGrid({ initialPosts }: PortfolioGridProps) {
   const [displayCount, setDisplayCount] = useState(10);
-  const { posts: livePosts, isLoading } = useInstagramFeed(30000); // Refresh every 30 seconds
+  const { posts: livePosts, isLoading } = useInstagramFeed(30000);
   
   // Use live posts if available, otherwise fall back to initial posts
   const posts = livePosts.length > 0 ? livePosts : initialPosts;
   
-  const getRandomColor = (() => {
-    let lastColorIndex = -1;
-    
-    return () => {
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * CARD_COLORS.length);
-      } while (newIndex === lastColorIndex);
-      
-      lastColorIndex = newIndex;
-      return CARD_COLORS[newIndex];
-    };
-  })();
-
-  const postColors = posts.map(() => getRandomColor());
+  // Generate colors only once when posts change
+  const postColors = useMemo(() => generateColors(posts.length), [posts.length]);
 
   const handleShare = async (permalink: string, caption: string) => {
     if (navigator.share) {

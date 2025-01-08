@@ -8,6 +8,17 @@ export async function GET() {
   try {
     const posts = await getInstagramFeed()
     
+    if (!posts || posts.length === 0) {
+      console.warn('No Instagram posts fetched, returning empty array')
+      return new NextResponse(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, must-revalidate',
+        },
+      })
+    }
+    
     return new NextResponse(JSON.stringify(posts), {
       status: 200,
       headers: {
@@ -17,9 +28,13 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error in Instagram API route:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch Instagram feed' },
-      { status: 500 }
-    )
+    
+    return new NextResponse(JSON.stringify([]), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, must-revalidate',
+      },
+    })
   }
 } 
